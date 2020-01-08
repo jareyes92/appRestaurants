@@ -5,7 +5,7 @@ export default function Restaurants() {
     
         return (
             <View>
-                <Text>Estamos en restaurantes</Text>
+                <Text>Estamos en restaurantesss</Text>
             </View>
         )
 
