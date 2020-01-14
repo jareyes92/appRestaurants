@@ -3,37 +3,43 @@ import { StyleSheet, View, Text } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
 import { validateEmail } from "../../utils/Validation";
 import * as firebase from "firebase";
+import Loading from "../Loading";
+import { withNavigation } from "react-navigation";
 
-export default function RegisterForm() {
+function RegisterForm(props) {
+    const { toastRef, navigation } = props
     const [hidePassword, setHidePassword] = useState(true)
     const [hideRepeatPassword, sethideRepeatPassword] = useState(true);
+    const [isVisibleLoanding, setIsVisibleLoanding] = useState(false)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
 
     const register = async () => {
+        setIsVisibleLoanding(true)
         if(!email || !password || !repeatPassword) {
-            console.log("Todos los campos son obligatorios")
+            toastRef.current.show("Todos los campos son obligatorios")
         } else {
             if(!validateEmail(email)){
-                console.log("El email no es correcto")
+                toastRef.current.show("El email no es correcto")
             } else {
                 if(password !== repeatPassword) {
-                    console.log("Las contrasennas no son iguales")
+                    toastRef.current.show("Las contrasennas no son iguales")
                 } else {
                     await firebase
                         .auth()
                         .createUserWithEmailAndPassword(email.trim(),password)
                         .then(() => {
-                            console.log("Usuario creado correctamente")
+                            navigation.navigate("MyAccount")
                         })
                         .catch(() => {
-                            console.log("Error al crear la cuenta, intentelo mas tarde")
+                            toastRef.current.show("Error al crear la cuenta, intentelo mas tarde")
                         })
 
                 }
             }
         }
+        setIsVisibleLoanding(false)
     }
     
     return (
@@ -86,9 +92,12 @@ export default function RegisterForm() {
                 buttonStyle={styles.btnRegister}
                 onPress={ register }
             />
+            <Loading text="Creando cuenta" isVisible={isVisibleLoanding} />
         </View>
     )
 }
+
+export default withNavigation(RegisterForm)
 
 const styles = StyleSheet.create({
     formContainer: {
