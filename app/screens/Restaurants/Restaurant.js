@@ -11,7 +11,7 @@ import { Rating } from "react-native-elements";
 import Carousel from "../../components/Carousel";
 import * as firebase from "firebase";
 
-const screenWidth = Dimensions.get("window").width; // ancho de la pantalla del movill
+const screenWidth = Dimensions.get("window").width; // ancho de la pantalla del movilll
 
 export default function Restaurant(props) {
   const { navigation } = props;
